@@ -2,60 +2,121 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  factory DatabaseHelper() => _instance;
+
+  DatabaseHelper._internal();
+
   static Database? _database;
 
-  // Cria ou abre o banco de dados
   Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
+    if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  // Inicializa o banco de dados
-  _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'quiz_database.db');
-    return await openDatabase(path, onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE conquistas(id INTEGER PRIMARY KEY, conquista TEXT, fase INTEGER)',
-      );
-    }, version: 1);
-  }
-
-  // Salva uma conquista no banco de dados
-  Future<void> salvarConquista(String conquista, int fase) async {
-    final db = await database;
-    await db.insert(
-      'conquistas',
-      {'conquista': conquista, 'fase': fase},
-      conflictAlgorithm: ConflictAlgorithm.replace,
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'quiz_app.db');
+    print("Banco de dados iniciado em: $path"); // Log
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE progresso (
+            id INTEGER PRIMARY KEY,
+            fase_atual INTEGER,
+            pergunta_atual INTEGER
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE conquistas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            conquista TEXT,
+            tema TEXT
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE progresso_tema (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tema TEXT,
+            acertos INTEGER
+          )
+        ''');
+      },
     );
   }
 
-  // Carrega as conquistas do banco de dados
-  Future<List<Map<String, dynamic>>> carregarConquistas() async {
+  Future<void> salvarProgresso(int fase, int pergunta) async {
     final db = await database;
-    return await db.query('conquistas');
-  }
-
-  // Salva o progresso de fase no banco de dados
-  Future<void> salvarProgresso(int faseAtual, int perguntaAtual) async {
-    final db = await database;
+    print("Salvando progresso: Fase $fase, Pergunta $pergunta"); // Log
     await db.insert(
       'progresso',
-      {'fase_atual': faseAtual, 'pergunta_atual': perguntaAtual},
+      {'fase_atual': fase, 'pergunta_atual': pergunta},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  // Carrega o progresso de fase
   Future<Map<String, dynamic>?> carregarProgresso() async {
     final db = await database;
-    var result = await db.query('progresso');
+    final result = await db.query('progresso', limit: 1);
+    print("Progresso carregado: $result"); // Log
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<void> salvarConquista(String conquista, String tema) async {
+    final db = await database;
+    print("Salvando conquista: $conquista, Tema: $tema"); // Log
+    await db.insert(
+      'conquistas',
+      {'conquista': conquista, 'tema': tema},
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> carregarConquistas() async {
+    final db = await database;
+    final conquistas = await db.query('conquistas');
+    print("Conquistas carregadas: $conquistas"); // Log
+    return conquistas;
+  }
+
+  Future<void> atualizarProgressoTema(String tema) async {
+    final db = await database;
+    final result = await db.query(
+      'progresso_tema',
+      where: 'tema = ?',
+      whereArgs: [tema],
+    );
+
     if (result.isNotEmpty) {
-      return result.first;
+      int acertos = result.first['acertos'] as int;
+      await db.update(
+        'progresso_tema',
+        {'acertos': acertos + 1},
+        where: 'tema = ?',
+        whereArgs: [tema],
+      );
+    } else {
+      await db.insert(
+        'progresso_tema',
+        {'tema': tema, 'acertos': 1},
+      );
     }
-    return null;
+    print("Progresso do tema $tema atualizado"); // Log
+  }
+
+  Future<int> obterProgressoTema(String tema) async {
+    final db = await database;
+    final result = await db.query(
+      'progresso_tema',
+      where: 'tema = ?',
+      whereArgs: [tema],
+    );
+
+    if (result.isNotEmpty) {
+      return result.first['acertos'] as int;
+    }
+    return 0;
   }
 }
+

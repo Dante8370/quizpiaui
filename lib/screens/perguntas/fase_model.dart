@@ -1,8 +1,9 @@
-class Pergunta {
+  class Pergunta {
   final String texto;
+  final String categoria; 
   final List<Map<String, Object>> respostas;
 
-  Pergunta({required this.texto, required this.respostas});
+  Pergunta({required this.texto,required this.categoria, required this.respostas});
 }
 
 class Fase {
@@ -12,6 +13,7 @@ class Fase {
   Fase({required this.nome, required this.perguntas});
 }
 
+
 List<Fase> obterFases() {
   return [
     Fase(
@@ -19,6 +21,7 @@ List<Fase> obterFases() {
       perguntas: [
         Pergunta(
           texto: 'Qual é a capital do Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Teresina', 'isCorrect': true},
             {'text': 'Parnaíba', 'isCorrect': false},
@@ -28,6 +31,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'O Piauí faz divisa com quantos estados?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': '6', 'isCorrect': true},
             {'text': '7', 'isCorrect': false},
@@ -37,6 +41,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual é o principal rio do Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Rio Parnaíba', 'isCorrect': true},
             {'text': 'Rio São Francisco', 'isCorrect': false},
@@ -46,6 +51,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual é o maior município do Piauí em extensão territorial?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Campo Maior', 'isCorrect': false},
             {'text': 'Teresina', 'isCorrect': false},
@@ -55,6 +61,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual o evento cultural mais famoso do Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Carnaval de Teresina', 'isCorrect': false},
             {'text': 'Festival de Inverno de Pedro II', 'isCorrect': true},
@@ -64,6 +71,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Em que ano o Piauí foi fundado?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': '1822', 'isCorrect': false},
             {'text': '1889', 'isCorrect': false},
@@ -73,6 +81,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual é a principal atividade econômica do Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Agronegócio', 'isCorrect': true},
             {'text': 'Turismo', 'isCorrect': false},
@@ -82,6 +91,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual é a religião predominante no Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Protestantismo', 'isCorrect': false},
             {'text': 'Catolicismo', 'isCorrect': true},
@@ -91,6 +101,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual é o ponto turístico mais conhecido de Teresina?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Praça Pedro II', 'isCorrect': false},
             {'text': 'Encontro dos Rios', 'isCorrect': true},
@@ -100,9 +111,10 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'O Piauí é o único estado do Brasil a não ter litoral. Verdadeiro ou falso?',
+          categoria: 'História do Piauí',
           respostas: [
-            {'text': 'Verdadeiro', 'isCorrect': true},
-            {'text': 'Falso', 'isCorrect': false},
+            {'text': 'Verdadeiro', 'isCorrect': false},
+            {'text': 'Falso', 'isCorrect': true},
           ],
         ),
       ],
@@ -113,6 +125,7 @@ List<Fase> obterFases() {
       perguntas: [
         Pergunta(
           texto: 'Qual é o animal símbolo do Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Onça-pintada', 'isCorrect': true},
             {'text': 'Tartaruga', 'isCorrect': false},
@@ -122,6 +135,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Em que bioma o Piauí está inserido, onde há uma grande diversidade de fauna?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Cerrado', 'isCorrect': true},
             {'text': 'Mata Atlântica', 'isCorrect': false},
@@ -131,6 +145,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual desses animais é encontrado no Parque Nacional de Jericoacoara, no Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Cervo-do-pantanal', 'isCorrect': true},
             {'text': 'Macaco-prego', 'isCorrect': false},
@@ -140,6 +155,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual é a principal característica do animal "lobo-guará", que pode ser encontrado no Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'É o maior canídeo da América do Sul', 'isCorrect': true},
             {'text': 'Vive apenas em áreas urbanas', 'isCorrect': false},
@@ -149,6 +165,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Onde é possível encontrar a espécie de peixe "curimatá", que é típica do Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Nos rios e lagos do Piauí', 'isCorrect': true},
             {'text': 'Apenas na costa do estado', 'isCorrect': false},
@@ -158,6 +175,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual desses répteis é comum no Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Cascavel', 'isCorrect': true},
             {'text': 'Cobra coral', 'isCorrect': false},
@@ -167,6 +185,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'O que caracteriza a fauna do Parque Nacional Serra da Capivara, no Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Grande diversidade de aves e mamíferos', 'isCorrect': true},
             {'text': 'Presença de apenas espécies aquáticas', 'isCorrect': false},
@@ -176,6 +195,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual desses animais é uma espécie ameaçada de extinção no Piauí?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Arara-azul', 'isCorrect': true},
             {'text': 'Jaguatirica', 'isCorrect': false},
@@ -185,6 +205,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'A quati é um animal que pode ser encontrado em áreas do Piauí. Qual sua principal alimentação?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Frutas, insetos e pequenos vertebrados', 'isCorrect': true},
             {'text': 'Somente folhas', 'isCorrect': false},
@@ -194,6 +215,7 @@ List<Fase> obterFases() {
         ),
         Pergunta(
           texto: 'Qual animal é conhecido por viver nas áreas de caatinga do Piauí e é adaptado ao clima seco?',
+          categoria: 'História do Piauí',
           respostas: [
             {'text': 'Veado-catingueiro', 'isCorrect': true},
             {'text': 'Lobo-guará', 'isCorrect': false},
