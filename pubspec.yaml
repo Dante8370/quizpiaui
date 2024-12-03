@@ -1,0 +1,27 @@
+name: quizpiaui
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.22.0
+  cupertino_icons: ^1.0.8
+  sqflite: ^2.4.1        # Moved to dependencies
+  path_provider: ^2.1.5  # Moved to dependencies
+  path:  ^1.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  assets:
+    - assets/background.jpg
+  uses-material-design: true
