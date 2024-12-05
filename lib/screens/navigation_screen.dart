@@ -19,16 +19,10 @@ class NavigationComponentState extends State<NavigationComponent> {
   // Lista das telas para navegação
   final List<Widget> telas = [
     const TelaHome(),
-    const TelaConquistas(conquistas: []),  // Passando a lista de conquistas inicialmente vazia
+    const TelaConquistas(),  // Passando a lista de conquistas inicialmente vazia
     const TelaInformacoes(),
   ];
 
-  void atualizarTelaConquistas() {
-    // Atualiza a tela de conquistas com a lista mais recente de conquistas
-    setState(() {
-      telas[1] = TelaConquistas(conquistas: conquistas);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +33,6 @@ class NavigationComponentState extends State<NavigationComponent> {
         onTap: (index) {
           setState(() {
             paginaAtual = index;
-            if (index == 1) {
-              // Quando for para a tela de conquistas, atualiza a tela com as conquistas mais recentes
-              atualizarTelaConquistas();
-            }
           });
         },
         items: const [

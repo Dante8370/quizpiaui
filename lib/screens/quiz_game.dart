@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import './perguntas/fase_model.dart'; 
 import 'database_helper.dart'; 
+import 'package:logging/logging.dart';
+
+final Logger _logger = Logger('QuizScreen');
+
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key}); 
@@ -25,20 +29,25 @@ class QuizScreenState extends State<QuizScreen> {
 
   void _carregarProgresso() async {
     var progresso = await DatabaseHelper().carregarProgresso();
-    print("Carregando progresso: $progresso"); // Log
+    _logger.info("Carregando progresso: $progresso");
     if (progresso != null) {
       setState(() {
-        faseAtual = progresso['fase_atual']; 
-        perguntaAtual = progresso['pergunta_atual'] ?? 0; // Garantir que começa da primeira pergunta
+        faseAtual = progresso['fase_atual'];
+        perguntaAtual = progresso['pergunta_atual'] ?? 0;
+        score = progresso['pontuacao'] ?? 0;  // Carregar a pontuação
       });
+      _logger.info("Progresso carregado: Fase $faseAtual, Pergunta $perguntaAtual, Pontuação $score");
     } else {
-      // Se o progresso for nulo, iniciamos do começo
       setState(() {
         faseAtual = 0;
         perguntaAtual = 0;
+        score = 0; // Inicializa a pontuação
       });
+      _logger.info("Progresso não encontrado, iniciando do começo");
     }
   }
+
+
 
 
   void _carregarConquistas() async {
@@ -49,70 +58,82 @@ class QuizScreenState extends State<QuizScreen> {
     });
   }
 
-  void responderPergunta(bool isCorrect, String tema) async {
-    print("Respondendo pergunta. Correto: $isCorrect, Tema: $tema"); // Log
-    if (isCorrect) {
-      setState(() {
-        score += 10; 
-      });
-      await DatabaseHelper().atualizarProgressoTema(tema);
-      int acertos = await DatabaseHelper().obterProgressoTema(tema);
-      print("Acertos no tema $tema: $acertos"); // Log
 
-      if (acertos == 3) {
-        String conquista = 'Historiador Iniciante em $tema';
-        _adicionarConquista(conquista, tema);
-      } else if (acertos == 5) {
-        String conquista = 'Historiador Veterano em $tema';
-        _adicionarConquista(conquista, tema);
-      }
+void responderPergunta(bool isCorrect, String tema) async {
+  if (isCorrect) {
+    setState(() {
+      score += 10; // Incrementa pontuação
+    });
+
+    // Atualizar progresso no tema
+    await DatabaseHelper().atualizarProgressoTema(tema);
+    int acertos = await DatabaseHelper().obterProgressoTema(tema);
+
+    // Criar conquistas com base no tema
+    if (acertos == 3) {
+      String conquista = 'Explorador Iniciante em $tema';
+      _adicionarConquista(conquista, tema);
+    } else if (acertos == 5) {
+      String conquista = 'Especialista em $tema';
+      _adicionarConquista(conquista, tema);
+    } else if (acertos == 10) {
+      String conquista = 'Mestre do Conhecimento em $tema';
+      _adicionarConquista(conquista, tema);
     }
-
-    if (perguntaAtual < fases[faseAtual].perguntas.length - 1) {
-      setState(() {
-        perguntaAtual++;
-      });
-    } else {
-      if (faseAtual < fases.length - 1) {
-        _showParabensDialog();
-      } else {
-        _showFinalScoreDialog();
-      }
-    }
-
-    await DatabaseHelper().salvarProgresso(faseAtual, perguntaAtual);
-    print("Progresso salvo: Fase $faseAtual, Pergunta $perguntaAtual"); // Log
   }
 
+  // Passa para a próxima pergunta ou fase
+  if (perguntaAtual < fases[faseAtual].perguntas.length - 1) {
+    setState(() {
+      perguntaAtual++;
+    });
+  } else if (faseAtual < fases.length - 1) {
+    _showParabensDialog();
+    setState(() {
+      faseAtual++;
+      perguntaAtual = 0;
+    });
+  } else {
+    _showFinalScoreDialog();
+  }
+
+  // Salva o progresso
+  await DatabaseHelper().salvarProgresso(faseAtual, perguntaAtual, score);
+}
+
+
+
   void _adicionarConquista(String conquista, String tema) async {
-    print("Adicionando conquista: $conquista, Tema: $tema"); // Log
+    _logger.info("Adicionando conquista: $conquista, Tema: $tema"); // Log
     setState(() {
       conquistas.add(conquista); 
     });
     await DatabaseHelper().salvarConquista(conquista, tema);
   }
 
+
   void _showParabensDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Parabéns!'),
-        content: const Text('Você completou esta fase!'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); 
-              setState(() {
-                faseAtual++; 
-                perguntaAtual = 0;
-              });
-            },
-            child: const Text('Continuar'),
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Parabéns!'),
+      content: const Text('Você completou esta fase!'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); 
+            setState(() {
+              faseAtual++; 
+              perguntaAtual = 0;
+            });
+          },
+          child: const Text('Continuar'),
           ),
         ],
       ),
     );
   }
+
 
   void _showFinalScoreDialog() {
     showDialog(

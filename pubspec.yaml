@@ -15,6 +15,8 @@ dependencies:
   sqflite: ^2.4.1        # Moved to dependencies
   path_provider: ^2.1.5  # Moved to dependencies
   path:  ^1.9.0
+  logger: ^1.1.0
+  logging: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -24,4 +26,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/background.jpg
+    - assets/imgconquistas.jpg
+    - assets/tatu.png
+
   uses-material-design: true
