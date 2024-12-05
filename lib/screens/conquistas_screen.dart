@@ -42,7 +42,9 @@ class TelaConquistasState extends State<TelaConquistas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conquistas'),
+        title: const Center( // Centraliza o título no AppBar
+          child: Text('Conquistas'),
+        ),
         backgroundColor: Colors.green[800],
       ),
       body: Container(
@@ -77,10 +79,14 @@ class TelaConquistasState extends State<TelaConquistas> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ListTile(
-                          leading: const Icon(Icons.star, color: Colors.amber, size: 30),
+                          leading: Image.asset(  // Substitui a estrela por uma imagem
+                            'assets/conquistas.png', // Substitua pelo caminho da sua imagem
+                            width: 30,  // Ajuste o tamanho da imagem
+                            height: 30, // Ajuste o tamanho da imagem
+                          ),
                           title: Text(
                             conquistas[index],
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18,),
                           ),
                           contentPadding: const EdgeInsets.all(16.0),
                         ),

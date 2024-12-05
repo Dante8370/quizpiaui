@@ -27,6 +27,7 @@ flutter:
   assets:
     - assets/background.jpg
     - assets/imgconquistas.jpg
+    - assets/conquistas.png
     - assets/tatu.png
 
   uses-material-design: true
